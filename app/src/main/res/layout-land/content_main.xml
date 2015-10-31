@@ -39,16 +39,16 @@
     android:layout_centerVertical="true"
     android:indeterminate="false"
     android:max="100"
-    android:progressDrawable="@drawable/circular_progress_bar"
+    android:progressDrawable="@drawable/circular_progress_bar_land"
     />
     <ProgressBar
         android:id="@+id/redProgress"
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:indeterminate="false"
         android:max="100"
-        android:progressDrawable="@drawable/red_progress"/>
+        android:progressDrawable="@drawable/red_progress_land"/>
 </RelativeLayout>
