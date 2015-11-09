@@ -14,41 +14,170 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="00.00"
+        android:text="0.00"
         android:id="@+id/tvTimer"
         android:textSize="60dp"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Average : "
-        android:id="@+id/tvAvg"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        />
+        android:text="Mean :"
+        android:id="@+id/ggg"
+        android:textColor="#ffffff"
+        android:layout_below="@+id/ttt"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
 
     <ProgressBar
     android:id="@+id/progressBar"
     style="?android:attr/progressBarStyleHorizontal"
     android:layout_width="300dp"
     android:layout_height="300dp"
-    android:layout_centerHorizontal="true"
-    android:layout_centerVertical="true"
     android:indeterminate="false"
     android:max="100"
     android:progressDrawable="@drawable/circular_progress_bar"
-    />
+    android:layout_alignTop="@+id/redProgress"
+    android:layout_alignLeft="@+id/redProgress"
+    android:layout_alignStart="@+id/redProgress"/>
     <ProgressBar
         android:id="@+id/redProgress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         android:indeterminate="false"
         android:max="100"
-        android:progressDrawable="@drawable/red_progress"/>
+        android:progressDrawable="@drawable/red_progress"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Solves :"
+        android:id="@+id/ttt"
+        android:textColor="#FFFFFF"
+        android:layout_alignTop="@+id/linearLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/tvScramble"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="56dp"
+        android:gravity="center"/>
+
+    <Space
+        android:layout_width="20px"
+        android:layout_height="20px"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/space"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/progressBar"
+
+        android:weightSum="1"
+        android:layout_alignLeft="@+id/space"
+        android:layout_alignStart="@+id/space"
+        android:id="@+id/linearLayout">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.50"
+
+            android:id="@+id/layout1">
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.50"
+            android:id="@+id/layout2">
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Avg 5 :"
+        android:id="@+id/te1"
+        android:layout_below="@+id/ggg"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textColor="#FFFFFF"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Avg 12 :"
+        android:id="@+id/gfh"
+        android:layout_below="@+id/te1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textColor="#FFFFFF"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/tvCount"
+        android:layout_alignTop="@+id/ttt"
+        android:layout_toRightOf="@+id/gfh"
+        android:layout_toEndOf="@+id/gfh"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/tvAvg"
+        android:layout_below="@+id/tvCount"
+        android:layout_alignLeft="@+id/tvCount"
+        android:layout_alignStart="@+id/tvCount"
+        android:textColor="#ffffff" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/tvA5"
+        android:textColor="#ffffff"
+        android:layout_above="@+id/gfh"
+        android:layout_toRightOf="@+id/gfh"
+        android:layout_toEndOf="@+id/gfh" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/tvA12"
+        android:layout_below="@+id/tvA5"
+        android:layout_toRightOf="@+id/gfh"
+        android:layout_toEndOf="@+id/gfh"
+        android:textColor="#ffffff" />
+
+
 </RelativeLayout>

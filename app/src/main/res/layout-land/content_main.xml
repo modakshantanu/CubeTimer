@@ -16,7 +16,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="00.00"
         android:id="@+id/tvTimer"
-        android:textSize="60dp"
+        android:textSize="45dp"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
@@ -24,11 +24,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Average : "
-        android:id="@+id/tvAvg"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        />
+        android:text="Mean :"
+        android:id="@+id/ggg"
+        android:textColor="#ffffff"
+        android:layout_below="@+id/ttt"
+        android:layout_alignLeft="@+id/ttt"
+        android:layout_alignStart="@+id/ttt" />
 
     <ProgressBar
     android:id="@+id/progressBar"
@@ -51,4 +52,128 @@
         android:indeterminate="false"
         android:max="100"
         android:progressDrawable="@drawable/red_progress_land"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Solves :"
+        android:id="@+id/ttt"
+        android:textColor="#FFFFFF"
+        android:layout_alignTop="@+id/redProgress"
+        android:layout_toRightOf="@+id/redProgress"
+        android:layout_toEndOf="@+id/redProgress" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/tvScramble"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:ellipsize="none"
+        android:singleLine="false"
+        android:maxWidth = "200sp"
+        android:gravity="center"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/progressBar"
+        android:layout_toEndOf="@+id/progressBar"
+        android:weightSum="1"
+        android:gravity="bottom"
+        android:layout_below="@+id/tvTimer">
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.50"
+            android:id="@+id/layout1">
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.50"
+            android:id="@+id/layout2">
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Avg 5 :"
+        android:id="@+id/te1"
+        android:textColor="#FFFFFF"
+        android:layout_below="@+id/ggg"
+        android:layout_alignLeft="@+id/ggg"
+        android:layout_alignStart="@+id/ggg" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Avg 12 :"
+        android:id="@+id/gfh"
+        android:textColor="#FFFFFF"
+        android:layout_below="@+id/te1"
+        android:layout_alignLeft="@+id/te1"
+        android:layout_alignStart="@+id/te1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/tvCount"
+        android:layout_alignBottom="@+id/ttt"
+        android:layout_toRightOf="@+id/gfh"
+        android:layout_toEndOf="@+id/gfh"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/tvAvg"
+        android:layout_above="@+id/te1"
+        android:layout_alignLeft="@+id/tvCount"
+        android:layout_alignStart="@+id/tvCount"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/tvA5"
+        android:layout_above="@+id/gfh"
+        android:layout_alignLeft="@+id/tvAvg"
+        android:layout_alignStart="@+id/tvAvg"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/tvA12"
+        android:layout_alignBottom="@+id/gfh"
+        android:layout_alignLeft="@+id/tvA5"
+        android:layout_alignStart="@+id/tvA5"
+        android:textColor="#FFFFFF" />
+
+
 </RelativeLayout>

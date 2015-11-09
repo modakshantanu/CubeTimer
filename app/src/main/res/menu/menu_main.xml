@@ -1,6 +1,27 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+      xmlns:compat="http://schemas.android.com/apk/res-auto"
+      tools:context=".MainActivity">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+        android:orderInCategory="100" app:showAsAction="never"
+
+        />
+    <item
+        android:id="@+id/delete"
+        android:title="Delete previous time"
+        android:icon="@drawable/ic_action_name"
+        app:showAsAction="always"
+        />
+    <item
+        android:id="@+id/rotate"
+        android:title="Rotate screen"
+        app:showAsAction = "never"
+        />
+    <item
+        android:id="@+id/reset"
+        android:title="Reset Average"
+        app:showAsAction = "never"
+    />
+
 </menu>
