@@ -1,10 +1,14 @@
 package com.shantanu.cubetimer;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
@@ -12,13 +16,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.os.Handler;
@@ -28,6 +35,10 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import net.gnehzr.tnoodle.scrambles.Puzzle;
+import net.gnehzr.tnoodle.svglite.Dimension;
+import net.gnehzr.tnoodle.svglite.Svg;
 
 import java.util.Arrays;
 import java.util.List;
@@ -55,11 +66,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     int mins = 0;
     int ms = 0;
     Handler handler = new Handler();
+    Handler scrambleHandler = new Handler();
+    genScramble genScramble = new genScramble();
     Runnable updateTimer;
     RelativeLayout layout;
     Boolean timerRunning = false;
     Boolean waitingToStart = false;
     Boolean longPress;
+    boolean justcreated = true;
     String scrambleString;
 
     SharedPreferences.Editor editor;
@@ -99,13 +113,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         progress.setMax(1000);
         redProgress.setMax(1000);
 
+
         if(preferences.getInt("_versioncode",-1)!=BuildConfig.VERSION_CODE)
             initSharedPrefs();
         getSharedPrefs();
 
         String[] displaylist = new String[catList.length];
         for(int i=0;i<catList.length;i++){
-            displaylist[i] =catList[i].substring(1);
+            displaylist[i] =catList[i].substring(1).replace("_"," ");
 
         }
 
@@ -120,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         spinner.setSelection(currentcat.puzzle.id);
         spinner.setOnItemSelectedListener(this);
 
+        justcreated = true;
     }
 
     @Override
@@ -129,7 +145,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         setupVariables();
         showStats();
-        newScramble();
+
+        scramble.setText("Generating Scramble...");
+        genScramble.execute();
 
 
 
@@ -164,8 +182,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         showStats();
                         time.setTextColor(Color.WHITE);
                         handler.removeCallbacks(updateTimer);
+
                         timerRunning = false;
                         waitingToStart = false;
+
                         newScramble();
 
                         return true;
@@ -177,6 +197,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         waitingToStart = false;
                         timerRunning = true;
                         starttime = SystemClock.uptimeMillis();
+
+
+
+                        genScramble = new genScramble();
+                        if(genScramble.getStatus() != AsyncTask.Status.RUNNING)
+                            genScramble.execute(new Boolean(false));
                         handler.post(updateTimer);
                     }
                 }
@@ -336,7 +362,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 for(int i=0;i<5;i++){
 
                     if(s[i].solvetime!=max&&s[i].solvetime!=min){
-                        Log.e("avg",String.valueOf(s[i].solvetime));
                         a5+=s[i].solvetime;
                     }
 
@@ -375,8 +400,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         calculateAverages();
         avg.setText(average==0?" - ":timeToString(average));
         solves.setText(String.valueOf(numberofsolves));
-        A5view.setText(a5==0?" - ":timeToString(a5));
-        A12view.setText(a12==0?" - ": timeToString(a12));
+        A5view.setText(a5 == 0 ? " - " : timeToString(a5));
+        A12view.setText(a12 == 0 ? " - " : timeToString(a12));
 
         showTimes(getSolves());
 
@@ -385,12 +410,29 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void newScramble(){
 
-
-
-        scramble.setTextSize(generator.getFontSize(currentcat.puzzle));
-        scrambleString = generator.getScramble(currentcat.puzzle);
+        scramble.setTextSize(currentcat.puzzle.getFontSize());
         scramble.setText(scrambleString);
+
     }
+
+     private class genScramble extends AsyncTask<Boolean,Void,Void>{
+
+         @Override
+         protected Void doInBackground(Boolean... params) {
+
+             scrambleString = generator.getScramble(currentcat.puzzle);
+             return null;
+         }
+
+         @Override
+         protected void onPostExecute(Void aVoid) {
+             super.onPostExecute(aVoid);
+             if(!timerRunning) {
+                 scramble.setTextSize(currentcat.puzzle.getFontSize());
+                 scramble.setText(scrambleString);
+             }
+         }
+     }
 
 
     public void resetProgressBars(){
@@ -401,38 +443,51 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     void initSharedPrefs() {
 
-
-
-
-        editor.putString("_categories", "_None,_2x2,_3x3,_4x4,_5x5");
-        editor.putInt("_catcount", 5);
+        editor.putString("_categories", "_None,_2x2,_3x3,_3x3_OH,_3x3_BLD,_3x3_MBLD,_3x3_Feet,_4x4,_4x4_BLD,_5x5,_5x5_BLD,_6x6,_7x7,_Pyraminx,_Megaminx,_Skewb,_Square_1,_Clock");
+        editor.putInt("_catcount", 18);
         editor.commit();
 
-        catList = preferences.getString("_categories","_None,_2x2,_3x3,_4x4,_5x5").split(",");
+        catList = preferences.getString("_categories","_None,_2x2,_3x3,_3x3_OH,_3x3_BLD,_3x3_MBLD,_3x3_Feet,_4x4,_4x4_BLD,_5x5,_5x5_BLD,_6x6,_7x7,_Pyraminx,_Megaminx,_Skewb,_Square_1,_Clock").split(",");
 
 
         Category c = new Category();
-        for (int i = 0; i < catList.length; i++) {
-            Log.e("te",catList[i]);
-            c.setValues(catList[i], Puzzle.getById(i), true);
-            c.saveToPrefs(this);
-        }
+        for(int i=0;i<18;i++)
+            switch (i){
+                case 0:c.setValues(catList[i], com.shantanu.cubetimer.Puzzle.PUZZLE_NONE,true);c.saveToPrefs(this);break;
+                case 1:c.setValues(catList[i], com.shantanu.cubetimer.Puzzle.PUZZLE_2x2, true);c.saveToPrefs(this);break;
+                case 2:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_3x3,true);c.saveToPrefs(this);break;
+                case 3:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_3x3,true);c.saveToPrefs(this);break;
+                case 4:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_3x3,true);c.saveToPrefs(this);break;
+                case 5:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_NONE,true);c.saveToPrefs(this);break;
+                case 6:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_3x3,true);c.saveToPrefs(this);break;
+                case 7:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_4x4,true);c.saveToPrefs(this);break;
+                case 8:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_4x4,true);c.saveToPrefs(this);break;
+                case 9:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_5x5,true);c.saveToPrefs(this);break;
+                case 10:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_5x5,true);c.saveToPrefs(this);break;
+                case 11:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_6x6,true);c.saveToPrefs(this);break;
+                case 12:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_7x7,true);c.saveToPrefs(this);break;
+                case 13:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_PYRAMINX,true);c.saveToPrefs(this);break;
+                case 14:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_MEGAMINX,true);c.saveToPrefs(this);break;
+                case 15:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_SKEWB,true);c.saveToPrefs(this);break;
+                case 16:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_SQUARE1,true);c.saveToPrefs(this);break;
+                case 17:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_CLOCK,true);c.saveToPrefs(this);break;
+            }
 
 
         editor.putString("_currentcat", "_3x3");
         editor.putInt("_versioncode", BuildConfig.VERSION_CODE);
         editor.commit();
-        Log.e("e", catList[1]);
+
     }
 
     public void saveSharedPrefs(){
-        editor.putString("_currentcat",currentcat.name);
+        editor.putString("_currentcat", currentcat.name);
         editor.commit();
     }
     public void getSharedPrefs(){
-        category = new Category[preferences.getInt("_catcount",5)];
-        catList = preferences.getString("_categories","_None,_2x2,_3x3,_4x4,_5x5").split(",");
-        Log.e("fgs",catList[1]);
+        category = new Category[preferences.getInt("_catcount",18)];
+        catList = preferences.getString("_categories","_None,_2x2,_3x3,_3x3_OH,_3x3_BLD,_3x3_MBLD,_3x3_Feet,_4x4,_4x4_BLD,_5x5,_5x5_BLD,_6x6,_7x7,_Pyraminx,_Megaminx,_Skewb,_Square_1,_Clock").split(",");
+
 
         for(int i=0;i<category.length;i++){
             category[i] = new Category();
@@ -443,17 +498,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         database.catList = catList;
         currentcat.getFromPrefs(preferences.getString("_currentcat", "_3x3"), this);
-        Log.e("Cat", database.catList[1]);
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+        if(!justcreated) {
+            currentcat = category[position];
+            showStats();
 
-        currentcat = category[position];
-        showStats();
-        newScramble();
-        saveSharedPrefs();
+            scramble.setText("Generating Scramble...");
+            genScramble = new genScramble();
+            if (genScramble.getStatus() != AsyncTask.Status.RUNNING)
+                genScramble.execute();
+
+            saveSharedPrefs();
+        }else
+            justcreated = false;
     }
 
     public void addTime(long time){
@@ -504,4 +565,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
     }
+
+
+
 }

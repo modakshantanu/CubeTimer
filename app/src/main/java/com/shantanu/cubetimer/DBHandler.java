@@ -20,7 +20,7 @@ import java.util.List;
 
 public class DBHandler extends SQLiteOpenHelper{
 
-    public static final int DATABASE_VERSION = 11;
+    public static final int DATABASE_VERSION = 15;
     public static final String DATABASE_NAME = "Solves.db";
 
     public String[] catList;
@@ -28,7 +28,12 @@ public class DBHandler extends SQLiteOpenHelper{
 
     public static final String ID = "_id";
     public static final String TIME = "solvetime";
+    public static final String SESSION = "session";
 
+    public static final String CAT_NAME = "_name";
+    public static final String CAT_PUZZLE = "_puzzle";
+    public static final String CAT_INSPECTION = "_inspection";
+    public static final String CAT_BASETIME = "_basetime";
 
     public Cursor c ;
 
@@ -42,31 +47,47 @@ public class DBHandler extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db) {
 
+        db.execSQL("CREATE TABLE _CATS (" +
+                CAT_NAME +" VARCHAR(50) PRIMARY KEY ," +
+                CAT_PUZZLE +" INTEGER," +
+                CAT_BASETIME +" INTEGER DEFAULT -1," +
+                CAT_INSPECTION + " INTEGER DEFAULT 0);");
+
         for(int i=0;i<catList.length;i++){
             Log.e("te",catList[i]);
             db.execSQL("CREATE TABLE " + catList[i] + " (" +
                     ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    SESSION + "INTEGER DEFAULT 1, "+
                     TIME + " LONG );");
-
 
         }
 
 
     }
 
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        for(int i=0;i<catList.length;i++){
-            db.execSQL("DROP TABLE IF EXISTS "+catList[i] +";");
+
+        for(int i=0;i<catList.length;i++) {
+            db.execSQL("CREATE TABLE IF NOT EXISTS " + catList[i] + " (" +
+                    ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    SESSION + "INTEGER DEFAULT 1, "+
+                    TIME + " LONG );");
+           try {
+               db.execSQL("ALTER TABLE " + catList[i] + " ADD " + SESSION + " INTEGER DEFAULT 1;");
+           }catch (Exception e){
+           }
         }
-        onCreate(db);
+
+
     }
 
     void addSolve(Solve solve,String table){
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
-        String TABLE_NAME = table;
+         String TABLE_NAME = table;
 
         values.put(TIME, solve.solvetime);
 
