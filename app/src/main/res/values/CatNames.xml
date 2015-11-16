@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="CatNames">
+
+        <item>_None</item>
+        <item>_2x2</item>
+        <item>_3x3</item>
+        <item>_3x3_OH</item>
+        <item>_3x3_BLD</item>
+        <item>_3x3_MBLD</item>
+        <item>_3x3_Feet</item>
+        <item>_4x4</item>
+        <item>_4x4_BLD</item>
+        <item>_5x5</item>
+        <item>_5x5_BLD</item>
+        <item>_6x6</item>
+        <item>_7x7</item>
+        <item>_Pyraminx</item>
+        <item>_Megaminx</item>
+        <item>_Skewb</item>
+        <item>_Square_1</item>
+        <item>_Clock</item>
+
+    </string-array>
+</resources>

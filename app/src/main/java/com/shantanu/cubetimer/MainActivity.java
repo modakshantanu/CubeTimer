@@ -66,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     int mins = 0;
     int ms = 0;
     Handler handler = new Handler();
-    Handler scrambleHandler = new Handler();
     genScramble genScramble = new genScramble();
     Runnable updateTimer;
     RelativeLayout layout;
@@ -100,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         progress = (ProgressBar) findViewById(R.id.progressBar);
         redProgress = (ProgressBar) findViewById(R.id.redProgress);
         spinner = (Spinner) findViewById(R.id.spinner);
-        database = new DBHandler(this,null,null,0,catList);
+        database = new DBHandler(this,null,null,0);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
@@ -114,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         redProgress.setMax(1000);
 
 
-        if(preferences.getInt("_versioncode",-1)!=BuildConfig.VERSION_CODE)
+        if(preferences.getInt("_versioncode",-1)!=BuildConfig.VERSION_CODE||true)
             initSharedPrefs();
         getSharedPrefs();
 
@@ -443,36 +442,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     void initSharedPrefs() {
 
-        editor.putString("_categories", "_None,_2x2,_3x3,_3x3_OH,_3x3_BLD,_3x3_MBLD,_3x3_Feet,_4x4,_4x4_BLD,_5x5,_5x5_BLD,_6x6,_7x7,_Pyraminx,_Megaminx,_Skewb,_Square_1,_Clock");
-        editor.putInt("_catcount", 18);
-        editor.commit();
-
-        catList = preferences.getString("_categories","_None,_2x2,_3x3,_3x3_OH,_3x3_BLD,_3x3_MBLD,_3x3_Feet,_4x4,_4x4_BLD,_5x5,_5x5_BLD,_6x6,_7x7,_Pyraminx,_Megaminx,_Skewb,_Square_1,_Clock").split(",");
-
-
-        Category c = new Category();
-        for(int i=0;i<18;i++)
-            switch (i){
-                case 0:c.setValues(catList[i], com.shantanu.cubetimer.Puzzle.PUZZLE_NONE,true);c.saveToPrefs(this);break;
-                case 1:c.setValues(catList[i], com.shantanu.cubetimer.Puzzle.PUZZLE_2x2, true);c.saveToPrefs(this);break;
-                case 2:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_3x3,true);c.saveToPrefs(this);break;
-                case 3:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_3x3,true);c.saveToPrefs(this);break;
-                case 4:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_3x3,true);c.saveToPrefs(this);break;
-                case 5:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_NONE,true);c.saveToPrefs(this);break;
-                case 6:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_3x3,true);c.saveToPrefs(this);break;
-                case 7:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_4x4,true);c.saveToPrefs(this);break;
-                case 8:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_4x4,true);c.saveToPrefs(this);break;
-                case 9:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_5x5,true);c.saveToPrefs(this);break;
-                case 10:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_5x5,true);c.saveToPrefs(this);break;
-                case 11:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_6x6,true);c.saveToPrefs(this);break;
-                case 12:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_7x7,true);c.saveToPrefs(this);break;
-                case 13:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_PYRAMINX,true);c.saveToPrefs(this);break;
-                case 14:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_MEGAMINX,true);c.saveToPrefs(this);break;
-                case 15:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_SKEWB,true);c.saveToPrefs(this);break;
-                case 16:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_SQUARE1,true);c.saveToPrefs(this);break;
-                case 17:c.setValues(catList[i],com.shantanu.cubetimer.Puzzle.PUZZLE_CLOCK,true);c.saveToPrefs(this);break;
-            }
-
+        catList = database.getCatList();
+        Log.e("leg",String.valueOf(database.getCatCount()));
 
         editor.putString("_currentcat", "_3x3");
         editor.putInt("_versioncode", BuildConfig.VERSION_CODE);
@@ -485,9 +456,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         editor.commit();
     }
     public void getSharedPrefs(){
-        category = new Category[preferences.getInt("_catcount",18)];
-        catList = preferences.getString("_categories","_None,_2x2,_3x3,_3x3_OH,_3x3_BLD,_3x3_MBLD,_3x3_Feet,_4x4,_4x4_BLD,_5x5,_5x5_BLD,_6x6,_7x7,_Pyraminx,_Megaminx,_Skewb,_Square_1,_Clock").split(",");
-
+        category = new Category[database.getCatCount()];
 
         for(int i=0;i<category.length;i++){
             category[i] = new Category();
@@ -496,9 +465,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
 
-        database.catList = catList;
         currentcat.getFromPrefs(preferences.getString("_currentcat", "_3x3"), this);
     }
+
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -520,6 +489,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void addTime(long time){
         Solve s= new Solve();
         s.solvetime = time;
+        s.penalty = Penalty.NONE;
         database.addSolve(s,currentcat.name);
 
     }
@@ -537,6 +507,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             textViews[i].setTextColor(Color.WHITE);
             textViews[i].setTextSize(18);
             textViews[i].setGravity(Gravity.RIGHT);
+
+
         }
 
         for (int i = 0; i < Math.min(5,solveArray.length); i++) {
