@@ -7,6 +7,21 @@
         android:orderInCategory="100" app:showAsAction="never"
 
         />
+
+    <item
+        android:id="@+id/newsession"
+        android:title="New Session"
+        app:showAsAction = "ifRoom"
+        android:icon="@drawable/add_item"/>
+
+
+    <item
+        android:id="@+id/stats"
+        android:title="Stats"
+        app:showAsAction = "ifRoom"
+        android:icon="@drawable/stats_icon"
+        />
+
     <item
         android:id="@+id/delete"
         android:title="Delete previous time"

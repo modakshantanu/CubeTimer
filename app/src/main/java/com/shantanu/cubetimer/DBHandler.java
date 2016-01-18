@@ -21,7 +21,7 @@ import java.util.List;
 
 public class DBHandler extends SQLiteOpenHelper{
 
-    public static final int DATABASE_VERSION = 20;
+    public static final int DATABASE_VERSION = 21;
     public static final String DATABASE_NAME = "Solves.db";
 
     public String[] catList;
@@ -66,6 +66,7 @@ public class DBHandler extends SQLiteOpenHelper{
                     SESSION + " INTEGER DEFAULT 1, " +
                     PENALTY + " INTEGER DEFAULT 0,"+
                     TIME + " LONG );");
+
 
             c.put(CAT_NAME, catList[i]);
             c.put(CAT_PUZZLE, puzzleIds[i]);
@@ -118,33 +119,42 @@ public class DBHandler extends SQLiteOpenHelper{
 
 
 
-           }catch (Exception e){
+            }catch (Exception e){
+                 Log.e("gh", e.toString());
+            }
+            try{
+                db.execSQL("ALTER TABLE " + catList[i] + " ADD " + SESSION + " INTEGER DEFAULT 1;");
+            }catch (Exception e){
                 Log.e("gh", e.toString());
-           }
-           try{ db.execSQL("ALTER TABLE " + catList[i] + " ADD " + SESSION + " INTEGER DEFAULT 1;");
-           }catch (Exception e){
-               Log.e("gh", e.toString());
+            }
 
-           }
+            db.execSQL("Update " + catList[i] + " SET SESSION = 1;");
+            db.execSQL("Update " + catList[i] + " SET PENALTY = 0;");
+
+
+
 
         }
+
+
     }
 
-    void addSolve(Solve solve,String table){
+    void addSolve(Solve solve,String table,int session){
 
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(TIME, solve.solvetime);
-        values.put(PENALTY,solve.penalty.id);
+        values.put(PENALTY, solve.penalty.id);
+        values.put(SESSION, session);
         db.insert(table, null, values);
 
     }
 
-    Solve[] getAllSolves(String table){
+    Solve[] getAllSolves(String table,int session){
 
         String TABLE_NAME = table;
 
-        String query = "SELECT * FROM " + TABLE_NAME +" ORDER BY "+ID +" DESC;";
+        String query = "SELECT * FROM " + TABLE_NAME +" where session ="+String.valueOf(session)+" ORDER BY "+ID +" DESC;";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(query, null);
@@ -167,8 +177,8 @@ public class DBHandler extends SQLiteOpenHelper{
         return solveList;
     }
 
-    public void deletePrevious(String table){
-        String query = "SELECT MAX("+ID+") FROM "+table+";";
+    public void deletePrevious(String table,int session){
+        String query = "SELECT MAX("+ID+") FROM "+table+" where session ="+String.valueOf(session)+";";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor c = db.rawQuery(query, null);
 
@@ -179,8 +189,8 @@ public class DBHandler extends SQLiteOpenHelper{
         c.close();
     }
 
-    void deleteAllSolves(String table){
-        getWritableDatabase().delete(table, null, null);
+    void deleteAllSolves(String table,int session){
+        getWritableDatabase().delete(table, SESSION + " = " + String.valueOf(session), null);
     }
 
     String[] getCatList(){
@@ -208,10 +218,67 @@ public class DBHandler extends SQLiteOpenHelper{
         return returnArray;
 
     }
+    int[] getPuzzleIds(){
+        SQLiteDatabase db = getWritableDatabase();
+        String query = "SELECT * FROM "+ CAT_TABLE +" ;";
+
+        Cursor c = db.rawQuery(query,null);
+
+        int i=0;
+
+        int[] returnArray = new int[c.getCount()];
+        if(c.moveToFirst()){
+            do{
+                returnArray[i] = c.getInt(c.getColumnIndex(CAT_PUZZLE));
+                i++;
+            }while(c.moveToNext());
+
+
+        }
+
+        c.close();
+        return returnArray;
+
+    }
     int getCatCount(){
         return catList.length;
     }
 
+    int getMaxSession(String table){
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor c = db.rawQuery("select max("+SESSION+") from "+table+";",null);
+        if(c.moveToFirst()) {
+            return c.getInt(0)!=0?c.getInt(0):1;
+        }
+        else
+            return 1;
+
+    }
+
+    int getSolveCount(String table,int session){
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor c = db.rawQuery("select count(*) from "+table+" where "+ SESSION +" = "+String.valueOf(session) + ";",null);
+        if(c.moveToFirst()) {
+            return c.getInt(0);
+        }
+        else
+            return 0;
+    }
+
+    public void addPenalty(String table,int session,Penalty p) {
+
+        String query = "SELECT MAX("+ID+") FROM "+table+" where session ="+String.valueOf(session)+";";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery(query, null);
+
+
+        if(c.moveToFirst()) {
+            int maxid = c.getInt(0);
+            db.execSQL("UPDATE "+table +" SET "+ PENALTY+" = "+ String.valueOf(p.id)+" WHERE "+ID + " = "+ String.valueOf(maxid)+";");
+        }
+        c.close();
+
+    }
 }
 
 
