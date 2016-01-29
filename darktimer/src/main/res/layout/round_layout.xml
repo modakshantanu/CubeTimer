@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:id="@+id/layout"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:text="0.00"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textSize="30sp"
+        android:id="@+id/tvTimer"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/clock"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="#000000"
+        android:text="00:00"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:indeterminate="false"
+        android:max="100"
+        android:progressDrawable="@drawable/circular_progress_bar_round"
+        android:layout_alignTop="@+id/redProgress"
+        android:layout_alignLeft="@+id/redProgress"
+        android:layout_alignStart="@+id/redProgress"/>
+    <ProgressBar
+        android:id="@+id/redProgress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:indeterminate="false"
+        android:max="100"
+        android:progressDrawable="@drawable/red_progress_round"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Previous"
+        android:id="@+id/previous"
+        android:layout_above="@+id/tvTimer"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Avg5"
+        android:id="@+id/avg5"
+        android:layout_below="@+id/tvTimer"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Avg12"
+        android:id="@+id/avg12"
+        android:layout_below="@+id/avg5"
+        android:layout_centerHorizontal="true"/>
+
+    <TextClock
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textClock"
+        android:layout_above="@+id/previous"
+        android:layout_centerHorizontal="true"
+        android:textColor="#616161" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete previous"
+        android:id="@+id/delone"
+        android:layout_below="@+id/clock"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reset session"
+        android:id="@+id/delall"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:id="@+id/back"
+        android:layout_below="@+id/avg12"
+        android:layout_centerHorizontal="true" />
+
+
+</RelativeLayout>

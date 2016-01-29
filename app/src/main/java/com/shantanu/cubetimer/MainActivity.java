@@ -243,6 +243,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 updatedtime = timeswap + timeinms;
                 time.setText(timeToString(updatedtime));
 
+
                 if(average != 0){
                     progress.setProgress((int)(((float)updatedtime/(float)average)*1000));
                 }
@@ -343,10 +344,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 database.deleteAllSolves(currentcat.name,session);
                 resetProgressBars();
                 showStats();
-                break;
-            case R.id.stats:
-                Intent intent = new Intent(this,Stats.class);
-                intent.putExtra("Category", currentcat.name);
                 break;
             case R.id.newsession:
                 if(database.getSolveCount(currentcat.name,session)!=0) {

@@ -15,12 +15,6 @@
         android:icon="@drawable/add_item"/>
 
 
-    <item
-        android:id="@+id/stats"
-        android:title="Stats"
-        app:showAsAction = "ifRoom"
-        android:icon="@drawable/stats_icon"
-        />
 
     <item
         android:id="@+id/delete"
