@@ -1,1 +1,2 @@
-no thanks i dont want a readme.md
+A simple Cube timer with dark theme
+
